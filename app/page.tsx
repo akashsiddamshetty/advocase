@@ -1,113 +1,164 @@
-import Image from "next/image";
+"use client";
+import FileIcon from "@/components/FileIcon";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { FaCheckCircle, FaFilePdf, FaNewspaper } from "react-icons/fa";
+import { IoCloseCircle } from "react-icons/io5";
+import { RiProgress3Fill } from "react-icons/ri";
+
+const checkStatus = (status: string) => {
+  if (status === "completed")
+    return (
+      <div className="bg-green-100 flex items-center justify-center gap-1 text-green-400">
+        <FaCheckCircle />
+        <span>Completed</span>
+      </div>
+    );
+  if (status === "in progress")
+    return (
+      <div className="bg-orange-100 text-orange-400 flex items-center  gap-1 justify-center">
+        <RiProgress3Fill />
+        <span>In Progress</span>
+      </div>
+    );
+
+  if (status === "failed")
+    return (
+      <div className="bg-red-100 text-red-400 flex items-center gap-1  justify-center">
+        <IoCloseCircle />
+        <span>failed</span>
+      </div>
+    );
+};
+
+const recentstudies = [
+  {
+    id: 1,
+    title: "Dog bite complaint",
+    last_updated: "2 days ago",
+    status: "completed",
+  },
+  {
+    id: 2,
+    title: "The Cyberbullying Conspiracy",
+    last_updated: "1 day ago",
+    status: "in progress",
+  },
+  {
+    id: 3,
+    title: "Financial Fraud Investigation",
+    last_updated: "3 days ago",
+    status: "failed",
+  },
+  {
+    id: 4,
+    title: "Market Research Analysis",
+    last_updated: "5 days ago",
+    status: "completed",
+  },
+];
 
 export default function Home() {
+  const [textCount, setTextCout] = useState(0);
+  const files = [
+    {
+      name: "case document.pdf",
+    },
+    {
+      name: "case document.docx",
+    },
+    { name: "case document.docx" },
+  ];
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  const onSubmit = handleSubmit((data) => {
+    console.log(data);
+  });
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:size-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <>
+      <div className="bg-white  rounded-xl p-4 h-full">
+        <p className="font-bold">Recent Studies</p>
+        <div className="my-2">
+          {recentstudies.map((studies) => {
+            const { id, title, last_updated, status } = studies;
+            return (
+              <div key={id} className="w-80 my-2 border-2 rounded-xl p-4">
+                <p className="text-blue-400 font-bold capitalize ">{`"${title}"`}</p>
+                <div className="mt-2 flex items-center justify-between">
+                  <span>{last_updated}</span>
+                  <span className="capitalize font-bold text-sm">
+                    {checkStatus(status)}
+                  </span>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
+      <form
+        onSubmit={onSubmit}
+        className="relative h-full rounded-xl bg-white p-4 flex-1"
+      >
+        <p className="flex items-center gap-4 text-lg font-bold">
+          <span className="text-blue-400 text-2xl">
+            <FaNewspaper />
+          </span>
+          <span>
+            Get complete info about any case from AI-driven research assistance
+          </span>
+        </p>
+        <div className="relative overflow-hidden border-2 my-4 w-full h-20 rounded-xl">
+          <textarea
+            className="h-full w-full focus:outline-none p-2"
+            id="text"
+            maxLength={80}
+            placeholder="Ex : Land dispute, Mumbai, recent judgment"
+            {...register("text", {
+              required: true,
+              maxLength: 80,
+              onChange: (e) => setTextCout(e.target.value.length),
+            })}
+          />
+          <div className="absolute right-2 bottom-2 text-sm text-gray-400">
+            {textCount}/80
+          </div>
+        </div>
+        {errors.text?.type === "required" && (
+          <p className="text-red-400">Text Is Required</p>
+        )}
 
-      <div className="relative z-[-1] flex place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
+        <div className="w-full text-center flex items-center cursor-pointer font-bold justify-center flex-col gap-4 h-40 border-2 rounded-xl bg-gray-100 border-dotted">
+          <p>
+            Drag and drop here or click here to{" "}
+            <span className="text-blue-400 underline capitalize">
+              upload file
             </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Find in-depth information about Next.js features and API.
           </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
+          <div>
+            <h1>Maximum uploads : 1</h1>
+            <p>File formats : JPG, PNG, docx, Pdf etc.</p>
+          </div>
+        </div>
+        <div className="my-4">
+          <h1 className="font-bold">
+            Uploaded Files{" "}
+            <span className="bg-blue-100 mx-4 rounded-lg px-2 text-blue-400">
+              3/5
             </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Explore starter templates for Next.js.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-balance text-sm opacity-50">
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+          </h1>
+          <div className="space-y-2 my-4 text-lg">
+            {files.map((file, i) => {
+              return <FileIcon key={i} fileName={file.name} />;
+            })}
+          </div>
+        </div>
+        <button className="absolute rounded-full h-10  w-48 py-2 bg-custom-gradient text-white right-4 bottom-4">
+          Start
+        </button>
+      </form>
+    </>
   );
 }
