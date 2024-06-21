@@ -1,5 +1,4 @@
 import { FaFilePdf, FaFileWord, FaFileExcel, FaFileAlt } from "react-icons/fa";
-import { IoIosClose } from "react-icons/io";
 
 interface FileIconProps {
   fileName: string;
@@ -25,10 +24,9 @@ const FileIcon: React.FC<FileIconProps> = ({ fileName }) => {
   const { icon, color } = getIconAndColor(fileName);
 
   return (
-    <div className="flex py-1 px-2 rounded-lg items-center space-x-2 bg-gray-100 ">
+    <div className="flex gap-2 ">
       <span className={`text-2xl ${color}`}>{icon}</span>
       <span>{fileName}</span>
-      <IoIosClose />
     </div>
   );
 };
