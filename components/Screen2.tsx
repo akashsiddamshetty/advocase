@@ -72,7 +72,7 @@ const Screen2: FC<Screen2Props> = ({ setScreen, files }) => {
           </button>
         </div>
       </div>
-      <div className=" relative overflow-scroll rounded-xl h-full  flex-1">
+      <div className="relative overflow-hidden rounded-xl h-full  flex-1">
         <div className="flex items-center justify-center">
           {titles.map((item) => {
             return (
@@ -91,7 +91,7 @@ const Screen2: FC<Screen2Props> = ({ setScreen, files }) => {
             );
           })}
         </div>
-        <div className="bg-white p-4  h-full overflow-hidden">
+        <div className="bg-white p-4  h-full overflow-scroll">
           <h1 className="text-lg font-bold">Questions</h1>
           <div className="space-x-2">
             <button className="bg-blue-600 text-white px-6 py-1 rounded-full">
